@@ -1,6 +1,7 @@
 public class TabelaHashEnderecamentoAberto extends TabelaHashAbstrata {
     private NoHashEnderecamentoAberto[] tabela;
     private int tamanho;
+    private static final double FATOR_DE_CARGA = 0.75; // Deixar mais cheia
 
     public TabelaHashEnderecamentoAberto() {
         tabela = new NoHashEnderecamentoAberto[capacidade];
@@ -8,23 +9,23 @@ public class TabelaHashEnderecamentoAberto extends TabelaHashAbstrata {
     }
 
     private int funcaoHash(String chave) {
-        int hash = 7;
-        for (char c : chave.toCharArray()) {
-            hash = hash * 31 + c;
-        }
-        return Math.abs(hash % capacidade);
+        return Math.abs(chave.hashCode()) % capacidade;
     }
 
     @Override
     public void inserir(String chave) {
+        if (tamanho + 1 >= capacidade * FATOR_DE_CARGA) {
+            rehash();
+        }
+
         int indice = funcaoHash(chave);
-        int tentativas = 0;
 
         while (tabela[indice] != null && !tabela[indice].removido) {
+            if (tabela[indice].chave.equals(chave)) {
+                return;
+            }
             colisoes++;
-            tentativas++;
-            if (tentativas >= capacidade) return; // tabela cheia
-            indice = (indice + 1) % capacidade; // teste linear
+            indice = (indice + 1) % capacidade;
         }
 
         tabela[indice] = new NoHashEnderecamentoAberto(chave);
@@ -52,9 +53,31 @@ public class TabelaHashEnderecamentoAberto extends TabelaHashAbstrata {
         int[] dist = new int[capacidade];
         for (int i = 0; i < capacidade; i++) {
             if (tabela[i] != null && !tabela[i].removido) {
-                dist[i]++;
+                dist[i] = 1;
+            } else {
+                dist[i] = 0;
             }
         }
         return dist;
     }
+
+    private void rehash() {
+        int capacidadeAntiga = capacidade;
+        NoHashEnderecamentoAberto[] tabelaAntiga = tabela;
+
+        capacidade = capacidadeAntiga + (capacidadeAntiga / 2);
+        tabela = new NoHashEnderecamentoAberto[capacidade];
+        tamanho = 0;
+
+        int colisoesAnteriores = colisoes;
+        colisoes = 0;
+
+        for (NoHashEnderecamentoAberto no : tabelaAntiga) {
+            if (no != null && !no.removido) {
+                inserir(no.chave);
+            }
+        }
+        colisoes += colisoesAnteriores;
+    }
+
 }
