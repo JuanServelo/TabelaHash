@@ -1,14 +1,15 @@
 public class TabelaHashEnderecamentoAberto extends TabelaHashAbstrata {
-    private NoHashEnderecamentoAberto[] tabela;
+    private NoHash[] tabela;
     private int tamanho;
-    private static final double FATOR_DE_CARGA = 0.75; // Deixar mais cheia
+    private static final double FATOR_DE_CARGA = 0.75;
 
     public TabelaHashEnderecamentoAberto() {
-        tabela = new NoHashEnderecamentoAberto[capacidade];
+        tabela = new NoHash[capacidade];
         tamanho = 0;
     }
 
-    private int funcaoHash(String chave) {
+    @Override
+    protected int funcaoHash(String chave) {
         return Math.abs(chave.hashCode()) % capacidade;
     }
 
@@ -28,7 +29,7 @@ public class TabelaHashEnderecamentoAberto extends TabelaHashAbstrata {
             indice = (indice + 1) % capacidade;
         }
 
-        tabela[indice] = new NoHashEnderecamentoAberto(chave);
+        tabela[indice] = new NoHash(chave);
         tamanho++;
     }
 
@@ -49,35 +50,34 @@ public class TabelaHashEnderecamentoAberto extends TabelaHashAbstrata {
     }
 
     @Override
-    public int[] getDistribuicao() {
-        int[] dist = new int[capacidade];
-        for (int i = 0; i < capacidade; i++) {
-            if (tabela[i] != null && !tabela[i].removido) {
-                dist[i] = 1;
-            } else {
-                dist[i] = 0;
-            }
-        }
-        return dist;
-    }
+    public void rehash() {
+        int novaCapacidade = capacidade + (capacidade / 2);
+        NoHash[] tabelaAntiga = tabela;
 
-    private void rehash() {
-        int capacidadeAntiga = capacidade;
-        NoHashEnderecamentoAberto[] tabelaAntiga = tabela;
-
-        capacidade = capacidadeAntiga + (capacidadeAntiga / 2);
-        tabela = new NoHashEnderecamentoAberto[capacidade];
+        tabela = new NoHash[novaCapacidade];
+        capacidade = novaCapacidade;
         tamanho = 0;
 
         int colisoesAnteriores = colisoes;
         colisoes = 0;
 
-        for (NoHashEnderecamentoAberto no : tabelaAntiga) {
+        for (NoHash no : tabelaAntiga) {
             if (no != null && !no.removido) {
                 inserir(no.chave);
             }
         }
+
         colisoes += colisoesAnteriores;
     }
 
+    @Override
+    public int[] getDistribuicao() {
+        int[] dist = new int[capacidade];
+        for (int i = 0; i < capacidade; i++) {
+            if (tabela[i] != null && !tabela[i].removido) {
+                dist[i] = 1;
+            }
+        }
+        return dist;
+    }
 }

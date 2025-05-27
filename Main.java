@@ -14,7 +14,6 @@ public class Main {
         TabelaHashAbstrata encadeada = new TabelaHashEncadeamentoExterior();
         TabelaHashAbstrata aberta = new TabelaHashEnderecamentoAberto();
 
-        // Inserção
         long inicioEnc = System.nanoTime();
         for (String nome : nomes) {
             encadeada.inserir(nome);
@@ -27,7 +26,6 @@ public class Main {
         }
         long tempoAberta = System.nanoTime() - inicioAberta;
 
-        // Busca
         Collections.shuffle(nomes);
         List<String> amostra = nomes.subList(0, 1000);
 
@@ -43,7 +41,6 @@ public class Main {
         }
         long tempoBuscaAberta = System.nanoTime() - inicioBuscaAberta;
 
-        // Relatório
         System.out.println("=== RELATÓRIO FINAL ===");
 
         System.out.println("\nTabela com Encadeamento Exterior:");
