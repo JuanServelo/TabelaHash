@@ -1,7 +1,7 @@
 public class TabelaHashEncadeamentoExterior extends TabelaHashAbstrata {
     private NoHash[] tabela;
     private int tamanho;
-    private static final double LIMITE_FATOR_CARGA = 0.75;
+    private static final double FATOR_DE_CARGA = 0.75;
 
     public TabelaHashEncadeamentoExterior() {
         tabela = new NoHash[capacidade];
@@ -19,7 +19,7 @@ public class TabelaHashEncadeamentoExterior extends TabelaHashAbstrata {
 
     @Override
     public void inserir(String chave) {
-        if ((double) tamanho / capacidade > LIMITE_FATOR_CARGA) {
+        if ((double) tamanho / capacidade > FATOR_DE_CARGA) {
             rehash();
         }
 
