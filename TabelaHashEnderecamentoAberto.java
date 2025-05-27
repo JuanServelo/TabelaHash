@@ -15,7 +15,7 @@ public class TabelaHashEnderecamentoAberto extends TabelaHashAbstrata {
 
     @Override
     public void inserir(String chave) {
-        if (tamanho + 1 >= capacidade * FATOR_DE_CARGA) {
+        if ((double) tamanho / capacidade > FATOR_DE_CARGA) {
             rehash();
         }
 

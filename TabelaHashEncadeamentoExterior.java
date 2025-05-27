@@ -57,13 +57,15 @@ public class TabelaHashEncadeamentoExterior extends TabelaHashAbstrata {
 
     @Override
     public void rehash() {
-        int novaCapacidade = capacidade * 2;
+        int novaCapacidade = capacidade + (capacidade / 2);
         NoHash[] novaTabela = new NoHash[novaCapacidade];
         NoHash[] antigaTabela = tabela;
 
         tabela = novaTabela;
         capacidade = novaCapacidade;
         tamanho = 0;
+
+        int colisoesAnteriores = colisoes;
         colisoes = 0;
 
         for (NoHash no : antigaTabela) {
@@ -72,6 +74,8 @@ public class TabelaHashEncadeamentoExterior extends TabelaHashAbstrata {
                 no = no.proximo;
             }
         }
+
+        colisoes += colisoesAnteriores;
     }
 
     @Override
