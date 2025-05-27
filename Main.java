@@ -11,18 +11,18 @@ public class Main {
             }
         }
 
-        TabelaHashAbstrata encadeada = new TabelaHashEncadeamentoExterior();
-        TabelaHashAbstrata aberta = new TabelaHashEnderecamentoAberto();
+        TabelaHashAbstrata HashSomaASCII = new PrimeiraTabelaHash();
+        TabelaHashAbstrata HashCode = new SegundaTabelaHash();
 
         long inicioEnc = System.nanoTime();
         for (String nome : nomes) {
-            encadeada.inserir(nome);
+            HashSomaASCII.inserir(nome);
         }
         long tempoEnc = System.nanoTime() - inicioEnc;
 
         long inicioAberta = System.nanoTime();
         for (String nome : nomes) {
-            aberta.inserir(nome);
+            HashCode.inserir(nome);
         }
         long tempoAberta = System.nanoTime() - inicioAberta;
 
@@ -31,29 +31,29 @@ public class Main {
 
         long inicioBuscaEnc = System.nanoTime();
         for (String nome : amostra) {
-            encadeada.buscar(nome);
+            HashSomaASCII.buscar(nome);
         }
         long tempoBuscaEnc = System.nanoTime() - inicioBuscaEnc;
 
         long inicioBuscaAberta = System.nanoTime();
         for (String nome : amostra) {
-            aberta.buscar(nome);
+            HashCode.buscar(nome);
         }
         long tempoBuscaAberta = System.nanoTime() - inicioBuscaAberta;
 
         System.out.println("=== RELATÓRIO FINAL ===");
 
-        System.out.println("\nTabela com Encadeamento Exterior:");
-        System.out.println("Colisões: " + encadeada.getColisoes());
+        System.out.println("\nTabela com Hash (soma de chars):");
+        System.out.println("Colisões: " + HashSomaASCII.getColisoes());
         System.out.println("Tempo de inserção: " + tempoEnc / 1e6 + " ms");
         System.out.println("Tempo de busca: " + tempoBuscaEnc / 1e6 + " ms");
-        imprimirDistribuicao(encadeada.getDistribuicao());
+        imprimirDistribuicao(HashSomaASCII.getDistribuicao());
 
-        System.out.println("\nTabela com Endereçamento Aberto Linear:");
-        System.out.println("Colisões: " + aberta.getColisoes());
+        System.out.println("\nTabela com Hash (hashCode):");
+        System.out.println("Colisões: " + HashCode.getColisoes());
         System.out.println("Tempo de inserção: " + tempoAberta / 1e6 + " ms");
         System.out.println("Tempo de busca: " + tempoBuscaAberta / 1e6 + " ms");
-        imprimirDistribuicao(aberta.getDistribuicao());
+        imprimirDistribuicao(HashCode.getDistribuicao());
     }
 
     public static void imprimirDistribuicao(int[] dist) {

@@ -1,7 +1,6 @@
 public class NoHash {
     String chave;
-    boolean removido = false;
-    NoHash proximo = null;
+    NoHash proximo;
 
     public NoHash(String chave) {
         this.chave = chave;
